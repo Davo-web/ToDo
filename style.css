@@ -1,0 +1,64 @@
+@import url('https://fonts.googleapis.com/css2?family=Russo+One&display=swap');
+
+body {
+    font-family: Russo One, serif;
+    height: 100vh;
+    background-color: #0F1117;
+    display: flex;
+    /* align-items: center; */
+    padding: 70px;
+    justify-content: center;
+}
+
+.todo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 332px;
+    width: 1016px;
+    background-color: #0A0D13;
+    border-radius: 32px;
+    color: #fff;
+    padding: 40px 100px 28px 100px;
+}
+
+.todo-title {
+    color: #00D4FF;
+    font-size: 48px;
+    margin-bottom: 3px;
+}
+
+.slogan {
+    font-size: 30px;
+    margin-bottom: 46px;
+}
+
+.form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 17px;
+    margin-bottom: 16px;
+}
+
+.input{
+    font-size: 22px;
+    width: 656px;
+    height: 80px;
+    padding: 26px 21px;
+    border-radius: 20px;
+    background-color: #0F1117;
+}
+
+.btn {
+    border-radius: 50px;
+    background-color: #00D4FF;
+    font-size: 20px;
+    color: #0F1117;
+    padding: 28px 22px;
+}
+
+.message {
+    font-size: 20px;
+}
