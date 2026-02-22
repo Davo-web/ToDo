@@ -5,10 +5,13 @@ body {
     height: 100vh;
     background-color: #0F1117;
     display: flex;
-    /* align-items: center; */
+    flex-direction: column;
     padding: 70px;
-    justify-content: center;
+    color: #fff;
 }
+
+
+
 
 .todo {
     display: flex;
@@ -19,8 +22,10 @@ body {
     width: 1016px;
     background-color: #0A0D13;
     border-radius: 32px;
-    color: #fff;
     padding: 40px 100px 28px 100px;
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .todo-title {
@@ -56,9 +61,126 @@ body {
     background-color: #00D4FF;
     font-size: 20px;
     color: #0F1117;
-    padding: 28px 22px;
+    padding: 18px 22px;
 }
 
 .message {
     font-size: 20px;
+}
+
+
+
+
+
+
+.task-card {
+    width: 1016px;
+    background-color: #0A0D13;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 15px;
+    border-radius: 32px;
+
+    display: flex;
+    align-items: center;
+    padding: 15px 27px;
+}
+
+.custom-checkbox {
+    margin-right: 34px;
+    display: inline-block;
+    position: relative;
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    user-select: none;
+}
+
+.custom-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 40px;
+    width: 40px;
+    background-color: #eee;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+}
+
+.custom-checkbox input:checked ~ .checkmark {
+    background-color: #00d4ff;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+    left: 15px;
+    top: 8px;
+    width: 10px;
+    height: 20px;
+    border: solid black;
+    border-width: 0 4px 4px 0;
+    transform: rotate(45deg);
+}
+
+.custom-checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.task {
+    font-size: 25px;
+    flex-grow: 1;
+}
+
+.edit-btn {
+    margin-right: 10px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+}
+
+.edit-img {
+    width: 30px;
+    height: 30px;
+    user-select: none;
+}
+
+.delete-btn {
+    position: relative;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    border-radius: 50%;
+}
+
+.line1, .line2 {
+    position: absolute;
+    width: 2px;
+    height: 35px;
+    background-color: #00D4FF;
+}
+
+.line1 {
+    transform: rotate(45deg);
+}
+
+.line2 {
+    transform: rotate(-45deg);
+}
+
+.delete-btn:hover, .edit-btn:hover {
+    background-color: rgba(0, 212, 255, .1);
 }
