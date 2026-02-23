@@ -145,7 +145,7 @@ body {
     text-decoration: line-through;
 }
 
-.edit-btn {
+.edit-btn, .edit-btn-ok {
     margin-right: 10px;
     width: 60px;
     height: 60px;
@@ -156,6 +156,15 @@ body {
     width: 30px;
     height: 30px;
     user-select: none;
+}
+
+.edit-input {
+    font-size: 25px;
+    flex-grow: 1;
+    padding: 10px 20px;
+    border-radius: 20px;
+    background-color: #0F1117;
+    margin-right: 20px;
 }
 
 .delete-btn {
@@ -185,6 +194,6 @@ body {
     transform: rotate(-45deg);
 }
 
-.delete-btn:hover, .edit-btn:hover {
+.delete-btn:hover, .edit-btn:hover, .edit-btn-ok:hover  {
     background-color: rgba(0, 212, 255, .1);
 }
