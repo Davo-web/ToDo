@@ -141,6 +141,10 @@ body {
     flex-grow: 1;
 }
 
+.task.active {
+    text-decoration: line-through;
+}
+
 .edit-btn {
     margin-right: 10px;
     width: 60px;
