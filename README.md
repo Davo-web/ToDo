@@ -3,7 +3,8 @@
 Простое, красивое и минималистичное приложение для ведения дел.  
 Тёмная тема, акцентный голубой цвет, шрифт Russo One и приятные анимации.
 
-![Скриншот приложения](https://via.placeholder.com/1016x600/0A0D13/00D4FF?text=ToDo+App+Screenshot)  
+![Скриншот приложения](<img width="1919" height="885" alt="image" src="https://github.com/user-attachments/assets/c6accbb8-7ca1-474a-939f-b29175065656" />
+)  
 *(скоро будет настоящий скриншот)*
 
 ## Что уже работает
@@ -37,8 +38,3 @@
 1. Скачай или склонируй репозиторий
 2. Открой файл `index.html` в браузере
 3. Приятного пользования
-
-```bash
-# или через live server (рекомендую)
-npm install -g live-server
-live-server
