@@ -8,13 +8,15 @@ form.addEventListener('submit', function(e) {
 
     let taskText = input.value.trim(); // получаем значение с инпута
     // разметка отображаемой задачи
-    let taskCardHtml = ` 
-    <div class="task-card">
+    let taskCard = document.createElement('div');
+    taskCard.className = 'task-card';
+
+    taskCard.innerHTML = `
         <label class="custom-checkbox">
             <input type="checkbox" class="checkbox">
             <span class="checkmark"></span>
         </label>
-        <p class="task">${taskText}</p>
+        <p class="task"></p>
         <button class="edit-btn">
             <img src="./img/Vector.png" alt="edit" class="edit-img">
         </button>
@@ -22,9 +24,14 @@ form.addEventListener('submit', function(e) {
             <span class="line1"></span>
             <span class="line2"></span>
         </button>
-    </div>
-    `
-    ToDo.insertAdjacentHTML('afterend', taskCardHtml); // вставляем задачу после контейнера
+    `;
+
+    taskCard.querySelector('.task').textContent = taskText;
+
+    ToDo.insertAdjacentElement('afterend',taskCard); // вставляем задачу после контейнера
+
+
+
 
     let task = document.querySelector('.task');
     let checkbox = document.querySelector('.checkbox');
@@ -45,7 +52,7 @@ form.addEventListener('submit', function(e) {
 
 
 
-    let taskCard = document.querySelector('.task-card');
+    taskCard = document.querySelector('.task-card');
     let deleteBtn = document.querySelector('.delete-btn');
     if (document.querySelector('.task-card')) { // проверяем есть ли на сайте задача
         message.textContent = 'Работаем!';
@@ -66,8 +73,7 @@ form.addEventListener('submit', function(e) {
         let editInputHtml = `
         <input type="text" value="${task.textContent}" class="edit-input">
         `
-        task.insertAdjacentHTML('afterend', editInputHtml);
-        task.remove(); 
+        task.innerHTML =  editInputHtml;
 
         // фокус на инпут, курсор в конец текста
         let editInput = document.querySelector('.edit-input');
@@ -79,32 +85,16 @@ form.addEventListener('submit', function(e) {
 
 
         // кнопка подтверждения изменений вместо карандаша
-        let edit2 = `
-        <button class="edit-btn-ok">
-            <img src="./img/ok.svg" alt="ok" class="edit-img">
-        </button>
-        `
-        editBtn.insertAdjacentHTML('afterend', edit2);
-        editBtn.remove(); 
+        editBtn.querySelector('.edit-img').src = './img/ok.svg';
 
 
         editInput.addEventListener('blur', function() {
             taskText = editInput.value;
-            task = `
-            <p class="task">${taskText}</p>
-            `
-            editInput.insertAdjacentHTML('afterend', task);
+            taskCard.querySelector('.task').textContent = taskText;
             editInput.remove();
-            editBtn = `
-            <button class="edit-btn">
-                <img src="./img/Vector.png" alt="edit" class="edit-img">
-            </button>
-            `
-            console.log(editBtn);
-            edit2 = document.querySelector('.edit-btn-ok');
-            edit2.insertAdjacentHTML('afterend', editBtn);
-            edit2.remove();
+            editBtn.querySelector('.edit-img').src = './img/Vector.png';
         })
+
     })
 
 
