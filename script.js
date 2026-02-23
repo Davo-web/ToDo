@@ -85,16 +85,37 @@ form.addEventListener('submit', function(e) {
 
 
         // кнопка подтверждения изменений вместо карандаша
-        editBtn.querySelector('.edit-img').src = './img/ok.svg';
+        let editBtn2Html = `
+        <button class="edit-btn2">
+            <img src="./img/ok.svg" alt="edit" class="edit-img">
+        </button>
+        `
+        editBtn.insertAdjacentHTML('afterend', editBtn2Html);
+        editBtn.style.display = 'none';
+
+        let editBtn2 = document.querySelector('.edit-btn2');
+        editBtn2.addEventListener('click', function(){
+            editBtn.style.display = 'block';
+            editBtn2.remove();
+        })
+
 
 
         editInput.addEventListener('blur', function() {
             taskText = editInput.value;
             taskCard.querySelector('.task').textContent = taskText;
             editInput.remove();
-            editBtn.querySelector('.edit-img').src = './img/Vector.png';
+            editBtn.style.display = 'block';
+            editBtn2.remove();
         })
 
+        editInput.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                this.blur();
+                editBtn.style.display = 'block';
+                editBtn2.remove();
+            }
+        })
     })
 
 
