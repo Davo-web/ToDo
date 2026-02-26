@@ -74,7 +74,7 @@ form.addEventListener('submit', function(e) {
     editBtn.addEventListener('click', function() {
         // вставляем поле ввода вместо текста задачи
         let editInputHtml = `
-        <input type="text" value="${task.textContent}" class="edit-input">
+        <input type="text" value="${task.textContent}" class="edit-input" placeholder = "Some task...">
         `
         task.innerHTML =  editInputHtml;
 
