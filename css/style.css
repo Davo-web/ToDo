@@ -11,8 +11,6 @@ body {
 }
 
 
-
-
 .todo {
     display: flex;
     flex-direction: column;
@@ -67,6 +65,7 @@ body {
 .message {
     font-size: 20px;
 }
+
 
 
 
@@ -139,6 +138,7 @@ body {
 .task {
     font-size: 25px;
     flex-grow: 1;
+    overflow-wrap: anywhere;
 }
 
 .task.active {
