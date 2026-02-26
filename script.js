@@ -7,6 +7,7 @@ form.addEventListener('submit', function(e) {
     e.preventDefault();
 
     let taskText = input.value.trim(); // получаем значение с инпута
+    if (!taskText) return false
     // разметка отображаемой задачи
     let taskCard = document.createElement('div');
     taskCard.className = 'task-card';
@@ -80,10 +81,9 @@ form.addEventListener('submit', function(e) {
         // фокус на инпут, курсор в конец текста
         let editInput = document.querySelector('.edit-input');
         editInput.focus();
-        let editInputValue = editInput.value; // запоминаем текст
+        let editInputValue = editInput.value.trim(); // запоминаем текст
         editInput.value = ""; // сбрасываем инпут, чтоб курсор был в конце текста
         editInput.value = editInputValue; // возвращаем значение
-
 
 
         // кнопка подтверждения изменений вместо карандаша
@@ -96,15 +96,16 @@ form.addEventListener('submit', function(e) {
         editBtn.style.display = 'none';
 
         let editBtn2 = document.querySelector('.edit-btn2');
-        editBtn2.addEventListener('click', function(){
-            editBtn.style.display = 'block';
-            editBtn2.remove();
-        })
+        // editBtn2.addEventListener('click', function(){
+        //     editBtn.style.display = 'block';
+        //     editBtn2.remove();
+        // })
 
 
 
         editInput.addEventListener('blur', function() {
-            taskText = editInput.value;
+            taskText = editInput.value.trim();
+            if (!taskText) return this.focus();
             taskCard.querySelector('.task').textContent = taskText;
             editInput.remove();
             editBtn.style.display = 'block';
@@ -113,6 +114,8 @@ form.addEventListener('submit', function(e) {
 
         editInput.addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
+                taskText = editInput.value.trim();
+                if (!taskText) return false
                 this.blur();
                 editBtn.style.display = 'block';
                 editBtn2.remove();
