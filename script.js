@@ -17,13 +17,15 @@ form.addEventListener('submit', function(e) {
             <span class="checkmark"></span>
         </label>
         <p class="task"></p>
-        <button class="edit-btn">
-            <img src="./img/Vector.png" alt="edit" class="edit-img">
-        </button>
-        <button class="delete-btn">
-            <span class="line1"></span>
-            <span class="line2"></span>
-        </button>
+        <div class = "btns">
+            <button class="edit-btn">
+                <img src="./img/Vector.png" alt="edit" class="edit-img">
+            </button>
+            <button class="delete-btn">
+                <span class="line1"></span>
+                <span class="line2"></span>
+            </button>
+        </div>
     `;
 
     taskCard.querySelector('.task').textContent = taskText;

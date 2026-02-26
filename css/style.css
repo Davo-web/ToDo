@@ -82,6 +82,7 @@ body {
 
     display: flex;
     align-items: center;
+    justify-content: center;
     padding: 15px 27px;
 }
 
@@ -136,6 +137,7 @@ body {
 }
 
 .task {
+    max-width: 758px;
     font-size: 25px;
     flex-grow: 1;
     overflow-wrap: anywhere;
@@ -143,6 +145,10 @@ body {
 
 .task.active {
     text-decoration: line-through;
+}
+
+.btns {
+    display: flex;
 }
 
 .edit-btn, .edit-btn2 {
