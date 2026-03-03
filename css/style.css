@@ -84,6 +84,14 @@ body {
     align-items: center;
     justify-content: center;
     padding: 15px 27px;
+
+    transition: all 0.15s ease-in-out;
+}
+
+.task-card.active {
+    transform: scale(0.97);
+    background-color: #12151b;
+    text-decoration: line-through;
 }
 
 .custom-checkbox {
@@ -141,10 +149,6 @@ body {
     font-size: 25px;
     flex-grow: 1;
     overflow-wrap: anywhere;
-}
-
-.task.active {
-    text-decoration: line-through;
 }
 
 .btns {

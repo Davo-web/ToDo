@@ -7,7 +7,7 @@ form.addEventListener('submit', function(e) {
     e.preventDefault();
 
     let taskText = input.value.trim(); // получаем значение с инпута
-    if (!taskText) return false
+    if (!taskText) return false // если инпут пуст, то не добавлять
     // разметка отображаемой задачи
     let taskCard = document.createElement('div');
     taskCard.className = 'task-card';
@@ -44,12 +44,27 @@ form.addEventListener('submit', function(e) {
                 document.querySelectorAll('.checkbox:checked').length === checkboxes.length;
         }
     checkbox.addEventListener('change', function(){
-        if (checkbox.checked) task.classList.add('active'); // перечё1ркивание
-        else task.classList.remove('active');
-
+        // перечёркивание и стиль выполненных задач
+        if (checkbox.checked) taskCard.classList.add('active');
+        else taskCard.classList.remove('active');
         
         if (allChecked()) message.textContent = 'Задачи сделаны. Отдыхай!';
         if (!allChecked()) message.textContent = 'Работаем!';
+
+
+        // Превращаем NodeList в Array
+        // let taskCardsNode = document.querySelectorAll('.task-card');
+        // let taskCards = Array.from(taskCardsNode);
+        // if (checkbox.checked) {
+        //     let index = taskCards.indexOf(taskCard);
+        //     for (let i = 0; i < taskCards.length - 1; i++) {
+        //         taskCards[i] = taskCards[i + 1]; // Двигаем элементы влево
+        //     }
+        //     taskCards[taskCards.length - 1] = taskCards[index];
+        //     console.log(index);
+        // }
+        // console.log(taskCards);
+
     }) 
 
 
@@ -104,6 +119,7 @@ form.addEventListener('submit', function(e) {
 
 
         editInput.addEventListener('blur', function() {
+            // если инпут пуст, то не прерывать редактирование
             taskText = editInput.value.trim();
             if (!taskText) return this.focus();
             taskCard.querySelector('.task').textContent = taskText;
@@ -114,6 +130,7 @@ form.addEventListener('submit', function(e) {
 
         editInput.addEventListener('keydown', function(event) {
             if (event.key === 'Enter') {
+                // если инпут пуст, то не прерывать редактирование
                 taskText = editInput.value.trim();
                 if (!taskText) return false
                 this.blur();
