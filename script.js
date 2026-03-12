@@ -2,7 +2,10 @@ const form = document.querySelector('.form');
 let input = document.querySelector('.input')
 const ToDo = document.querySelector('.todo');
 let message = document.querySelector('.message');
+let taskBox = document.querySelector('.task-box');
 
+
+// обработчик формы (добавления задач)
 form.addEventListener('submit', function(e) {
     e.preventDefault();
 
@@ -29,117 +32,121 @@ form.addEventListener('submit', function(e) {
         </div>
     `;
 
+    // вставляем текст задачи в .task (<p>)
     taskCard.querySelector('.task').textContent = taskText;
 
-    ToDo.insertAdjacentElement('afterend',taskCard); // вставляем задачу после контейнера
+    taskBox.appendChild(taskCard); // вставляем задачу после контейнера
+
+    input.value = '';
+    allChecked();
+})
 
 
 
-
-    let task = document.querySelector('.task');
-    let checkbox = document.querySelector('.checkbox');
-    function allChecked() { // проверка если выделены все чекбоксы
-            let checkboxes = document.querySelectorAll('.checkbox');
-            return checkboxes.length > 0 &&  // если чекбоксов не 0 и выбранных = количество чекбоксов
-                document.querySelectorAll('.checkbox:checked').length === checkboxes.length;
-        }
-    checkbox.addEventListener('change', function(){
-        // перечёркивание и стиль выполненных задач
-        if (checkbox.checked) taskCard.classList.add('active');
-        else taskCard.classList.remove('active');
-        
-        if (allChecked()) message.textContent = 'Задачи сделаны. Отдыхай!';
-        if (!allChecked()) message.textContent = 'Работаем!';
-
-
-        // Превращаем NodeList в Array
-        // let taskCardsNode = document.querySelectorAll('.task-card');
-        // let taskCards = Array.from(taskCardsNode);
-        // if (checkbox.checked) {
-        //     let index = taskCards.indexOf(taskCard);
-        //     for (let i = 0; i < taskCards.length - 1; i++) {
-        //         taskCards[i] = taskCards[i + 1]; // Двигаем элементы влево
-        //     }
-        //     taskCards[taskCards.length - 1] = taskCards[index];
-        //     console.log(index);
-        // }
-        // console.log(taskCards);
-
-    }) 
-
-
-
-
-    taskCard = document.querySelector('.task-card');
-    let deleteBtn = document.querySelector('.delete-btn');
-    if (document.querySelector('.task-card')) { // проверяем есть ли на сайте задача
+function allChecked() { // проверка если выделены все чекбоксы
+    let checkbox = document.querySelectorAll('.checkbox');
+    // если чекбоксов не 0 и выбранных = количество чекбоксов
+    if (checkbox.length > 0 && document.querySelectorAll('.checkbox:checked').length == checkbox.length)
+        message.textContent = 'Задачи сделаны. Отдыхай!';
+    else if (!document.querySelector('.task-card')) message.textContent = 'Задач нет. Отдыхай!';
+    else 
         message.textContent = 'Работаем!';
-        deleteBtn.addEventListener('click', function() { // удаление задач
-            taskCard.remove();
-            if (allChecked()) message.textContent = 'Задачи сделаны. Отдыхай!';
-            if (!allChecked()) message.textContent = 'Работаем!';
-            if (!document.querySelector('.task-card')) message.textContent = 'Задач нет. Отдыхай!';
-        })
+}
+
+
+taskBox.addEventListener('click', (event) => {
+    if (event.target.classList.contains('checkbox')) {
+        // перечёркивание и стиль выполненных задач
+        let taskCard = event.target.closest('.task-card');
+        if (event.target.checked) taskCard.classList.add('active');
+        else taskCard.classList.remove('active');
+        allChecked();
+        
+        // if (event.target.checked) taskBox.append(taskCard);
+        // if(!event.target.checked) taskBox.prepend(taskCard);
+
+        return;
     }
 
 
 
+    if (document.querySelector('.task-card')) { // проверяем есть ли на сайте задача
+        if (event.target.closest('.delete-btn')) {   // удаление задач
+                let taskCard = event.target.closest('.task-card');
+                taskCard.remove();
+                allChecked();
+        }
+    }
 
-    let editBtn = document.querySelector('.edit-btn');
-    editBtn.addEventListener('click', function() {
+
+
+    if (event.target.closest('.edit-btn')) {
+        let editBtnEl = event.target.closest('.edit-btn');
+        let taskCard = editBtnEl.closest('.task-card');
+        let task = taskCard.querySelector('.task');
+
+
+
         // вставляем поле ввода вместо текста задачи
         let editInputHtml = `
         <input type="text" value="${task.textContent}" class="edit-input" placeholder = "Some task...">
-        `
+        `;
         task.innerHTML =  editInputHtml;
 
+
+
+
         // фокус на инпут, курсор в конец текста
-        let editInput = document.querySelector('.edit-input');
-        editInput.focus();
-        let editInputValue = editInput.value.trim(); // запоминаем текст
-        editInput.value = ""; // сбрасываем инпут, чтоб курсор был в конце текста
-        editInput.value = editInputValue; // возвращаем значение
+        let editInputEl = taskCard.querySelector('.edit-input');
+        editInputEl.focus();
+        let editInputValue = editInputEl.value.trim(); // запоминаем текст
+        editInputEl.value = ""; // сбрасываем инпут, чтоб курсор был в конце текста
+        editInputEl.value = editInputValue; // возвращаем значение
+
 
 
         // кнопка подтверждения изменений вместо карандаша
+        editBtnEl.style.display = 'none';
+
         let editBtn2Html = `
         <button class="edit-btn2">
             <img src="./img/ok.svg" alt="edit" class="edit-img">
         </button>
         `
-        editBtn.insertAdjacentHTML('afterend', editBtn2Html);
-        editBtn.style.display = 'none';
+        editBtnEl.insertAdjacentHTML('afterend', editBtn2Html);
+        
 
-        let editBtn2 = document.querySelector('.edit-btn2');
-        // editBtn2.addEventListener('click', function(){
-        //     editBtn.style.display = 'block';
-        //     editBtn2.remove();
-        // })
+        let editBtn2 = taskCard.querySelector('.edit-btn2');
 
 
 
-        editInput.addEventListener('blur', function() {
-            // если инпут пуст, то не прерывать редактирование
-            taskText = editInput.value.trim();
-            if (!taskText) return this.focus();
-            taskCard.querySelector('.task').textContent = taskText;
-            editInput.remove();
-            editBtn.style.display = 'block';
-            editBtn2.remove();
-        })
-
-        editInput.addEventListener('keydown', function(event) {
-            if (event.key === 'Enter') {
-                // если инпут пуст, то не прерывать редактирование
-                taskText = editInput.value.trim();
-                if (!taskText) return false
-                this.blur();
-                editBtn.style.display = 'block';
-                editBtn2.remove();
+        function finishEditing() {
+            let newText = editInputEl.value.trim();
+            if (!newText) {
+                editInputEl.focus();
+                return;
             }
-        })
-    })
 
+            task.textContent = newText;               // возвращаем <p>
+            editInputEl.remove();                     // убираем input
+            editBtnEl.style.display = 'block';        // показываем старую кнопку edit
+            editBtn2.remove();                        // убираем кнопку "ок"
+        }
 
-    input.value = '';
-});
+        // на blur
+        editInputEl.addEventListener('blur', finishEditing);
+
+        // на Enter
+        editInputEl.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                finishEditing();
+            }
+        });
+
+        // на клик по "ок"
+        editBtn2.addEventListener('click', finishEditing);
+
+        return;
+    }
+})
