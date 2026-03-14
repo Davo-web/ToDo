@@ -1,5 +1,5 @@
 const form = document.querySelector('.form');
-let input = document.querySelector('.input')
+let input = document.querySelector('.input');
 const ToDo = document.querySelector('.todo');
 let message = document.querySelector('.message');
 let taskBox = document.querySelector('.task-box');
@@ -10,7 +10,10 @@ form.addEventListener('submit', function(e) {
     e.preventDefault();
 
     let taskText = input.value.trim(); // получаем значение с инпута
-    if (!taskText) return false // если инпут пуст, то не добавлять
+    if (!taskText) {
+        input.focus();
+        return // если инпут пуст, то не добавлять
+    }
     // разметка отображаемой задачи
     let taskCard = document.createElement('div');
     taskCard.className = 'task-card';
@@ -43,14 +46,14 @@ form.addEventListener('submit', function(e) {
 
 
 
-function allChecked() { // проверка если выделены все чекбоксы
+function allChecked() { // смена текста message при выделении чекбоксов
+    // проверка если выделены все чекбоксы
     let checkbox = document.querySelectorAll('.checkbox');
     // если чекбоксов не 0 и выбранных = количество чекбоксов
     if (checkbox.length > 0 && document.querySelectorAll('.checkbox:checked').length == checkbox.length)
         message.textContent = 'Задачи сделаны. Отдыхай!';
     else if (!document.querySelector('.task-card')) message.textContent = 'Задач нет. Отдыхай!';
-    else 
-        message.textContent = 'Работаем!';
+    else message.textContent = 'Работаем!';
 }
 
 
@@ -62,9 +65,12 @@ taskBox.addEventListener('click', (event) => {
         else taskCard.classList.remove('active');
         allChecked();
         
-        // if (event.target.checked) taskBox.append(taskCard);
-        // if(!event.target.checked) taskBox.prepend(taskCard);
-
+        if (event.target.checked) {
+            taskCard.style.order = "1";
+        }
+        if(!event.target.checked) {
+            taskCard.style.order = "-1";
+        }
         return;
     }
 
@@ -79,13 +85,17 @@ taskBox.addEventListener('click', (event) => {
     }
 
 
-
+    // редактирование задач
     if (event.target.closest('.edit-btn')) {
         let editBtnEl = event.target.closest('.edit-btn');
         let taskCard = editBtnEl.closest('.task-card');
         let task = taskCard.querySelector('.task');
 
 
+        // запрет появления инпута при редактировании одной и нажатия на кнопку редактирования другой задачи
+        if (document.activeElement == taskBox.querySelector('.edit-input')) {
+            return;
+        }
 
         // вставляем поле ввода вместо текста задачи
         let editInputHtml = `
@@ -94,8 +104,7 @@ taskBox.addEventListener('click', (event) => {
         task.innerHTML =  editInputHtml;
 
 
-
-
+        
         // фокус на инпут, курсор в конец текста
         let editInputEl = taskCard.querySelector('.edit-input');
         editInputEl.focus();
@@ -107,7 +116,7 @@ taskBox.addEventListener('click', (event) => {
 
         // кнопка подтверждения изменений вместо карандаша
         editBtnEl.style.display = 'none';
-
+        
         let editBtn2Html = `
         <button class="edit-btn2">
             <img src="./img/ok.svg" alt="edit" class="edit-img">
@@ -115,7 +124,6 @@ taskBox.addEventListener('click', (event) => {
         `
         editBtnEl.insertAdjacentHTML('afterend', editBtn2Html);
         
-
         let editBtn2 = taskCard.querySelector('.edit-btn2');
 
 
@@ -147,6 +155,6 @@ taskBox.addEventListener('click', (event) => {
         // на клик по "ок"
         editBtn2.addEventListener('click', finishEditing);
 
-        return;
+        // return;
     }
 })

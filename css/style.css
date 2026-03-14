@@ -71,6 +71,10 @@ body {
 
 
 
+.task-box {
+    display: flex;
+    flex-direction: column;
+}
 
 .task-card {
     width: 1016px;
