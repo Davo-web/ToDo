@@ -135,8 +135,7 @@ taskBox.addEventListener('click', (event) => {
                 return;
             }
 
-            task.textContent = newText;               // возвращаем <p>
-            editInputEl.remove();                     // убираем input
+            task.textContent = newText;               // вставляем отредактированную задачу в <p>
             editBtnEl.style.display = 'block';        // показываем старую кнопку edit
             editBtn2.remove();                        // убираем кнопку "ок"
         }
@@ -144,9 +143,9 @@ taskBox.addEventListener('click', (event) => {
         // на blur
         editInputEl.addEventListener('blur', finishEditing);
 
-        // на Enter
+        // на Enter и Escape
         editInputEl.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
+            if (e.key === 'Enter' || e.key === 'Escape') {
                 e.preventDefault();
                 finishEditing();
             }
@@ -154,7 +153,5 @@ taskBox.addEventListener('click', (event) => {
 
         // на клик по "ок"
         editBtn2.addEventListener('click', finishEditing);
-
-        // return;
     }
 })
