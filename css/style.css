@@ -8,6 +8,7 @@ body {
     flex-direction: column;
     padding: 70px;
     color: #fff;
+    overflow-x: hidden;
 }
 
 
@@ -89,13 +90,18 @@ body {
     justify-content: center;
     padding: 15px 27px;
 
-    transition: all 0.15s ease-in-out;
+    transition: all 0.35s ease-in-out;
 }
 
-.task-card.active {
+.task-card.checked {
     transform: scale(0.97);
     background-color: #12151b;
     text-decoration: line-through;
+}
+
+.task-card.deleted {
+    background-color: rgb(104, 11, 11);
+    transform: scale(.56) translateX(2000px);
 }
 
 .custom-checkbox {

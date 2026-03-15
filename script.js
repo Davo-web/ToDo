@@ -61,8 +61,8 @@ taskBox.addEventListener('click', (event) => {
     if (event.target.classList.contains('checkbox')) {
         // перечёркивание и стиль выполненных задач
         let taskCard = event.target.closest('.task-card');
-        if (event.target.checked) taskCard.classList.add('active');
-        else taskCard.classList.remove('active');
+        if (event.target.checked) taskCard.classList.add('checked');
+        else taskCard.classList.remove('checked');
         allChecked();
         
         if (event.target.checked) {
@@ -79,8 +79,12 @@ taskBox.addEventListener('click', (event) => {
     if (document.querySelector('.task-card')) { // проверяем есть ли на сайте задача
         if (event.target.closest('.delete-btn')) {   // удаление задач
                 let taskCard = event.target.closest('.task-card');
-                taskCard.remove();
-                allChecked();
+                taskCard.classList.add('deleted');
+                setTimeout(() => {
+                    taskCard.remove();
+                    allChecked();
+                },350);
+            allChecked();
         }
     }
 
