@@ -69,7 +69,7 @@ taskBox.addEventListener('click', (event) => {
             taskCard.style.order = "1";
         }
         if(!event.target.checked) {
-            taskCard.style.order = "-1";
+            taskCard.style.order = "0";
         }
         return;
     }
