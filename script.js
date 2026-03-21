@@ -37,7 +37,6 @@ form.addEventListener('submit', function(e) {
 
     // вставляем текст задачи в .task (<p>)
     taskCard.querySelector('.task').textContent = taskText;
-
     taskBox.appendChild(taskCard); // вставляем задачу после контейнера
 
     input.value = '';
@@ -45,6 +44,10 @@ form.addEventListener('submit', function(e) {
 })
 
 
+const countTask = function(){
+    let checkbox = document.querySelectorAll('.checkbox:not(:checked)');
+    return checkbox.length;
+}
 
 function allChecked() { // смена текста message при выделении чекбоксов
     // проверка если выделены все чекбоксы
@@ -53,7 +56,7 @@ function allChecked() { // смена текста message при выделен
     if (checkbox.length > 0 && document.querySelectorAll('.checkbox:checked').length == checkbox.length)
         message.textContent = 'Задачи сделаны. Отдыхай!';
     else if (!document.querySelector('.task-card')) message.textContent = 'Задач нет. Отдыхай!';
-    else message.textContent = 'Работаем!';
+    else message.textContent = `Работаем! - Задач: ${countTask()}`;
 }
 
 
@@ -84,7 +87,7 @@ taskBox.addEventListener('click', (event) => {
                     taskCard.remove();
                     allChecked();
                 },350);
-            allChecked();
+            // allChecked();
         }
     }
 
