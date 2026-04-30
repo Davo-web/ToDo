@@ -217,3 +217,8 @@ body {
 .delete-btn:hover, .edit-btn:hover, .edit-btn2:hover  {
     background-color: rgba(0, 212, 255, .1);
 }
+
+::selection {
+    background-color: #00D4FF;
+    color: #000;
+}

@@ -14,10 +14,11 @@ form.addEventListener('submit', function(e) {
         input.focus();
         return // если инпут пуст, то не добавлять
     }
-    // разметка отображаемой задачи
+    // создаём контейнер задачи
     let taskCard = document.createElement('div');
     taskCard.className = 'task-card';
 
+    // разметка отображаемой задачи
     taskCard.innerHTML = `
         <label class="custom-checkbox">
             <input type="checkbox" class="checkbox">
@@ -40,7 +41,7 @@ form.addEventListener('submit', function(e) {
     taskBox.appendChild(taskCard); // вставляем задачу после контейнера
 
     input.value = '';
-    allChecked();
+    changeMessage();
 })
 
 
@@ -49,7 +50,7 @@ const countTask = function(){
     return checkbox.length;
 }
 
-function allChecked() { // смена текста message при выделении чекбоксов
+function changeMessage() { // смена текста message при выделении чекбоксов
     // проверка если выделены все чекбоксы
     let checkbox = document.querySelectorAll('.checkbox');
     // если чекбоксов не 0 и выбранных = количество чекбоксов
@@ -59,14 +60,15 @@ function allChecked() { // смена текста message при выделен
     else message.textContent = `Работаем! - Задач: ${countTask()}`;
 }
 
-
+// делегирование событий. Обработчик на контейнер taskBox
 taskBox.addEventListener('click', (event) => {
+    // если нажатие на чекбокс
     if (event.target.classList.contains('checkbox')) {
         // перечёркивание и стиль выполненных задач
         let taskCard = event.target.closest('.task-card');
         if (event.target.checked) taskCard.classList.add('checked');
         else taskCard.classList.remove('checked');
-        allChecked();
+        changeMessage();
         
         if (event.target.checked) {
             taskCard.style.order = "1";
@@ -85,9 +87,8 @@ taskBox.addEventListener('click', (event) => {
                 taskCard.classList.add('deleted');
                 setTimeout(() => {
                     taskCard.remove();
-                    allChecked();
+                    changeMessage();
                 },350);
-            // allChecked();
         }
     }
 
@@ -106,7 +107,7 @@ taskBox.addEventListener('click', (event) => {
 
         // вставляем поле ввода вместо текста задачи
         let editInputHtml = `
-        <input type="text" value="${task.textContent}" class="edit-input" placeholder = "Some task...">
+        <input type="text" value="${task.textContent}" class="edit-input" placeholder = "...">
         `;
         task.innerHTML =  editInputHtml;
 
@@ -131,10 +132,10 @@ taskBox.addEventListener('click', (event) => {
         `
         editBtnEl.insertAdjacentHTML('afterend', editBtn2Html);
         
+
+
+
         let editBtn2 = taskCard.querySelector('.edit-btn2');
-
-
-
         function finishEditing() {
             let newText = editInputEl.value.trim();
             if (!newText) {
@@ -142,9 +143,9 @@ taskBox.addEventListener('click', (event) => {
                 return;
             }
 
-            task.textContent = newText;               // вставляем отредактированную задачу в <p>
-            editBtnEl.style.display = 'block';        // показываем старую кнопку edit
-            editBtn2.remove();                        // убираем кнопку "ок"
+            task.textContent = newText;           // вставляем отредактированную задачу в <p>
+            editBtnEl.style.display = 'block';    // показываем старую кнопку edit
+            editBtn2.remove();                    // убираем кнопку "ок"
         }
 
         // на blur
