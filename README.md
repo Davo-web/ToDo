@@ -40,7 +40,7 @@
 
 GitHub Pages:
 
-[Открыть приложение](https://https://davo-web.github.io/ToDo/)
+[Открыть приложение](https://davo-web.github.io/ToDo/)
 
 
 ---
