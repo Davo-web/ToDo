@@ -40,9 +40,8 @@
 
 GitHub Pages:
 
-```md
 [Открыть приложение](https://https://davo-web.github.io/ToDo/)
-```
+
 
 ---
 
