@@ -82,12 +82,10 @@ function countTask() {
 }
 
 function changeMessage() { // смена текста message при выделении чекбоксов
-    // проверка если выделены все чекбоксы
-    let checkbox = document.querySelectorAll('.checkbox');
-    // если чекбоксов не 0 и выбранных = количество чекбоксов
-    if (checkbox.length > 0 && document.querySelectorAll('.checkbox:checked').length == checkbox.length)
+    // если задач не 0 и все сделаны
+    if (taskArr.length && taskArr.every(task => task.ischecked))
         message.textContent = 'Задачи сделаны. Отдыхай!';
-    else if (!document.querySelector('.task-card')) message.textContent = 'Задач нет. Отдыхай!';
+    else if (!taskArr.length) message.textContent = 'Задач нет. Отдыхай!';
     else message.textContent = `Работаем! - Задач: ${countTask()}`;
 }
 
@@ -124,21 +122,20 @@ taskBox.addEventListener('click', (event) => {
 
 
 
-    if (document.querySelector('.task-card')) { // проверяем есть ли на сайте задача
-        if (event.target.closest('.delete-btn')) {   // удаление задач
-                let taskCard = event.target.closest('.task-card');
-                // удаление из массива удалённое задачи в DOM
-                const index = getTaskIndex(taskCard)
-                taskArr.splice(index, 1);
-                // отправка в localStorage обновлённый массив
-                savetask();
 
-                taskCard.classList.add('deleted');
-                setTimeout(() => {
-                    taskCard.remove();
-                    changeMessage();
-                },350);
-        }
+    if (event.target.closest('.delete-btn')) {   // удаление задач
+            let taskCard = event.target.closest('.task-card');
+            // удаление из массива удалённое задачи в DOM
+            const index = getTaskIndex(taskCard)
+            taskArr.splice(index, 1);
+            // отправка в localStorage обновлённый массив
+            savetask();
+
+            taskCard.classList.add('deleted');
+            setTimeout(() => {
+                taskCard.remove();
+                changeMessage();
+            },350);
     }
 
 
