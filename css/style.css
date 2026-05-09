@@ -97,6 +97,7 @@ body {
     transform: scale(0.97);
     background-color: #12151b;
     text-decoration: line-through;
+    order: 1;
 }
 
 .task-card.deleted {
