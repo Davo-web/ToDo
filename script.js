@@ -1,6 +1,5 @@
 const form = document.querySelector('.form');
 const input = document.querySelector('.input');
-const ToDo = document.querySelector('.todo');
 const message = document.querySelector('.message');
 const taskBox = document.querySelector('.task-box');
 const taskArr = JSON.parse(localStorage.getItem('tasklist')) || []; // список, содержащий объекты-карточки для LocalStorage
@@ -34,7 +33,6 @@ function createTask(id, tasktext, ischecked) {
         // сохраняем id в dataset, чтобы потом связать DOM-элемент с объектом в массиве
         taskCard.dataset.id = id;
         taskCard.className = `task-card ${ischecked ? 'checked' : ''}`;
-        taskCard.style.order = ischecked ? "1" : "0";
         // разметка отображаемой задачи
         taskCard.innerHTML = `
             <label class="custom-checkbox">
@@ -66,13 +64,13 @@ function addTask(tasktext) {
     };
 
     taskArr.push(task);
-    savetask();
+    saveTask();
 
     createTask(task.id, task.tasktext, task.ischecked);
 }
 
 
-function savetask() {
+function saveTask() {
     localStorage.setItem('tasklist', JSON.stringify(taskArr));
 }
 
@@ -94,77 +92,61 @@ function getTaskIndex(taskCard){
     return taskArr.findIndex(task => task.id === id);
 }
 
-// делегирование событий. Обработчик на контейнер taskBox
-taskBox.addEventListener('click', (event) => {
-    // если нажатие на чекбокс
-    if (event.target.classList.contains('checkbox')) {
-        // перечёркивание и стиль выполненных задач
-        let taskCard = event.target.closest('.task-card');
-        if (event.target.checked) {
-            taskCard.classList.add('checked');
-            taskCard.style.order = "1";
-            // нахождение индекста карточки для изменения состояния ischecked у неё в массиве taskArr
-            const index = getTaskIndex(taskCard);
-            taskArr[index].ischecked = true;
-            // снова отправляем в localStorage массив taskArr, тем самым обновляем данные
-            savetask();
-        }
-        else {
-            taskCard.classList.remove('checked');
-            taskCard.style.order = "0";
-            const index = getTaskIndex(taskCard);
-            taskArr[index].ischecked = false;
-            savetask();
-        }
+function handleCheckbox(event) {
+    // перечёркивание и стиль выполненных задач
+    let taskCard = event.target.closest('.task-card');
+    let isChecked = event.target.checked;
+    taskCard.classList.toggle('checked', isChecked);
+    // нахождение индекста карточки для изменения состояния ischecked у неё в массиве taskArr
+    const index = getTaskIndex(taskCard);
+    taskArr[index].ischecked = isChecked;
+    // отправляем в localStorage массив taskArr, тем самым обновляем данные
+    saveTask();
+    changeMessage();
+}
 
+
+function handleDelete(event) {
+    let taskCard = event.target.closest('.task-card');
+    // удаление из массива удалённое задачи в DOM
+    const index = getTaskIndex(taskCard)
+    taskArr.splice(index, 1);
+    // отправка в localStorage обновлённый массив
+    saveTask();
+
+    taskCard.classList.add('deleted');
+    setTimeout(() => {
+        taskCard.remove();
         changeMessage();
-    }
+    },350);
+}
 
 
-
-
-    if (event.target.closest('.delete-btn')) {   // удаление задач
-            let taskCard = event.target.closest('.task-card');
-            // удаление из массива удалённое задачи в DOM
-            const index = getTaskIndex(taskCard)
-            taskArr.splice(index, 1);
-            // отправка в localStorage обновлённый массив
-            savetask();
-
-            taskCard.classList.add('deleted');
-            setTimeout(() => {
-                taskCard.remove();
-                changeMessage();
-            },350);
-    }
-
-
-    // редактирование задач
-    if (event.target.closest('.edit-btn')) {
-        let editBtnEl = event.target.closest('.edit-btn');
+function handleEdit(event) {
+    let editBtnEl = event.target.closest('.edit-btn');
         let taskCard = editBtnEl.closest('.task-card');
         let task = taskCard.querySelector('.task');
 
 
         // запрет появления инпута при редактировании одной и нажатия на кнопку редактирования другой задачи
-        if (document.activeElement == taskBox.querySelector('.edit-input')) {
-            return;
-        }
+        if (taskBox.querySelector('.edit-input')) return;
 
+        let taskText = task.textContent;
         // вставляем поле ввода вместо текста задачи
         let editInputHtml = `
-        <input type="text" value="${task.textContent}" class="edit-input" placeholder = "...">
+        <input type="text" class="edit-input" placeholder = "...">
         `;
         task.innerHTML =  editInputHtml;
+        let editInputEl = taskCard.querySelector('.edit-input');
+        editInputEl.value = taskText;
 
 
         
         // фокус на инпут, курсор в конец текста
-        let editInputEl = taskCard.querySelector('.edit-input');
         editInputEl.focus();
-        let editInputValue = editInputEl.value.trim(); // запоминаем текст
-        editInputEl.value = ""; // сбрасываем инпут, чтоб курсор был в конце текста
-        editInputEl.value = editInputValue; // возвращаем значение
+        const length = editInputEl.value.length;
+        // устанавливаем курсор в конец текста
+        editInputEl.setSelectionRange(length, length);
 
 
 
@@ -182,18 +164,24 @@ taskBox.addEventListener('click', (event) => {
 
 
         let editBtn2 = taskCard.querySelector('.edit-btn2');
+        // флаг для предотвращения двойного вызова функции (от blur и нажатия esc, enter)
+        let isEditingFinished = false;
         function finishEditing() {
+            // если редактирование уже закончено (был вызов) -> return
+            if (isEditingFinished) return;
             let newText = editInputEl.value.trim();
             if (!newText) {
                 editInputEl.focus();
                 return;
             }
+            // меняем флаг, т.к. вызов функции произошёл
+            isEditingFinished = true;
 
             task.textContent = newText;                // вставляем отредактированную задачу в <p>
             // находим индекс изменённой задачи. Изменяем данные в массиве и отправляем в localStorage
             const index = getTaskIndex(taskCard);
             taskArr[index].tasktext = newText;
-            savetask();
+            saveTask();
             editBtnEl.style.display = 'block';    // показываем старую кнопку edit
             editBtn2.remove();                    // убираем кнопку "ок"
         }
@@ -203,13 +191,41 @@ taskBox.addEventListener('click', (event) => {
 
         // на Enter и Escape
         editInputEl.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter' || e.key === 'Escape') {
+            if (e.key === 'Enter') {
                 e.preventDefault();
                 finishEditing();
+            }
+            else if (e.key === 'Escape'){
+                e.preventDefault();
+                isEditingFinished = true;
+                task.textContent = taskText;
+                
+                editBtnEl.style.display = 'block';    // показываем старую кнопку edit
+                editBtn2.remove();                    // убираем кнопку "ок"
+
+                
             }
         });
 
         // на клик по "ок"
         editBtn2.addEventListener('click', finishEditing);
+}
+
+
+// делегирование событий. Обработчик на контейнер taskBox
+taskBox.addEventListener('click', (event) => {
+
+    if (event.target.classList.contains('checkbox')) {
+        handleCheckbox(event);
+        return;
+    }
+
+    if (event.target.closest('.delete-btn')) {
+        handleDelete(event);
+        return;
+    }
+
+    if (event.target.closest('.edit-btn')) {
+        handleEdit(event);
     }
 })
