@@ -101,7 +101,7 @@ body {
 
 .task-card.deleted {
     background-color: rgb(104, 11, 11);
-    transform: scale(.56) translateX(2000px);
+    transform: scale(.56) translateX(125vw);
 }
 
 .custom-checkbox {
