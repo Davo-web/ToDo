@@ -1,7 +1,10 @@
 const form = document.querySelector('.form');
 const input = document.querySelector('.input');
-const message = document.querySelector('.message');
+const message = document.querySelector('.message-text');
+const taskNum = document.querySelector('.taskNum');
 const taskBox = document.querySelector('.task-box');
+const categories = document.querySelector('.categories')
+const categoryBtns = document.querySelectorAll('.category-btn');
 const taskArr = JSON.parse(localStorage.getItem('tasklist')) || []; // список, содержащий объекты-карточки для LocalStorage
 
 
@@ -81,10 +84,18 @@ function countTask() {
 
 function changeMessage() { // смена текста message при выделении чекбоксов
     // если задач не 0 и все сделаны
-    if (taskArr.length && taskArr.every(task => task.ischecked))
+    if (taskArr.length && taskArr.every(task => task.ischecked)) {
         message.textContent = 'Задачи сделаны. Отдыхай!';
-    else if (!taskArr.length) message.textContent = 'Задач нет. Отдыхай!';
-    else message.textContent = `Работаем! - Задач: ${countTask()}`;
+        taskNum.textContent = '';
+    }
+    else if (!taskArr.length) {
+        message.textContent = 'Задач нет. Отдыхай!';
+        taskNum.textContent = '';
+    }
+    else {
+        message.textContent = "Работаем! Задач: ";
+        taskNum.textContent = `${countTask()}`;
+    }
 }
 
 function getTaskIndex(taskCard){
@@ -103,6 +114,9 @@ function handleCheckbox(event) {
     // отправляем в localStorage массив taskArr, тем самым обновляем данные
     saveTask();
     changeMessage();
+    if (currentFilter !== 'all') {
+        render();
+    }
 }
 
 
@@ -211,6 +225,20 @@ function handleEdit(event) {
         editBtn2.addEventListener('click', finishEditing);
 }
 
+function render(){
+    taskBox.innerHTML = '';
+    let filteredTask = taskArr;
+    if (currentFilter === 'active') {
+        filteredTask = taskArr.filter(task => !task.ischecked);
+    }
+    else if (currentFilter === 'completed') {
+        filteredTask = taskArr.filter(task => task.ischecked);
+    }
+    filteredTask.forEach(task => {
+        createTask(task.id, task.tasktext, task.ischecked);
+    });
+}
+
 
 // делегирование событий. Обработчик на контейнер taskBox
 taskBox.addEventListener('click', (event) => {
@@ -228,4 +256,22 @@ taskBox.addEventListener('click', (event) => {
     if (event.target.closest('.edit-btn')) {
         handleEdit(event);
     }
+})
+
+let currentFilter = 'all';
+categories.addEventListener('click', (event) => {
+    let allBtn = event.target.closest('.category-all');
+    let activeBtn = event.target.closest('.category-active');
+    let completedBtn = event.target.closest('.category-completed');
+
+    for (const btn of categoryBtns) {
+        btn.classList.remove('category-btn_active');
+    }
+    if (event.target !== categories) event.target.closest('.category-btn').classList.add('category-btn_active');
+
+    if (allBtn) currentFilter = 'all'
+    else if (activeBtn) currentFilter = 'active';
+    else if (completedBtn) currentFilter = 'completed';
+
+    render();
 })
