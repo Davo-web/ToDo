@@ -11,13 +11,30 @@
 <body>
 
     <div class="todo">
-        <p class="todo-title">ToDo - Твой список задач</p>
-        <p class="slogan">Планируй. Твори. Живи</p>
+        <h1 class="todo-title"><span>ToDo</span> - Твой список задач</h1>
+        <h2 class="slogan">Планируй. Твори. Живи</h2>
         <form class="form">
             <input type="text" placeholder="Новая задача" required class="input"> 
-            <button class="btn">Добавить</button>
+            <button class="addBtn">Добавить</button>
         </form>
-        <p class="message">Задач нет. Отдыхай!</p>
+        <p class="message">
+            <span class="message-text">Задач нет. Отдыхай!</span>
+            <span class="taskNum"></span>
+        </p> 
+    </div>
+
+    <div class="categories">
+        <button class="category-btn category-all category-btn_active">
+            <h3 class="category-title">Все</h3>
+        </button>
+        
+        <button class="category-btn category-active">
+            <h3 class="category-title">Активные</h3>
+        </button>
+        
+        <button class="category-btn category-completed">
+            <h3 class="category-title">Выполненные</h3>
+        </button>
     </div>
 
     <div class="task-box"></div>
