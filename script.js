@@ -6,13 +6,11 @@ const taskBox = document.querySelector('.task-box');
 const categories = document.querySelector('.categories')
 const categoryBtns = document.querySelectorAll('.category-btn');
 const taskArr = JSON.parse(localStorage.getItem('tasklist')) || []; // список, содержащий объекты-карточки для LocalStorage
-
+// состояние фильтров
+let currentFilter = 'all';
 
 // при перезагрузки страницы сохранённые карточки будут созданы
-taskArr.forEach(element => {
-    createTask(element.id, element.tasktext, element.ischecked);
-});
-changeMessage();
+render();
 
 
 // обработчик формы (добавления задач)
@@ -27,36 +25,37 @@ form.addEventListener('submit', function(e) {
     // присваиваем карточке id, вставляем текст задачи и создаём состояние ischecked
     addTask(taskText);
     input.value = '';
+    // render()
     changeMessage();
 })
 
 
 function createTask(id, tasktext, ischecked) {
-        let taskCard = document.createElement('div');
-        // сохраняем id в dataset, чтобы потом связать DOM-элемент с объектом в массиве
-        taskCard.dataset.id = id;
-        taskCard.className = `task-card ${ischecked ? 'checked' : ''}`;
-        // разметка отображаемой задачи
-        taskCard.innerHTML = `
-            <label class="custom-checkbox">
-                <input type="checkbox" class="checkbox" ${ischecked ? 'checked' : ''}>
-                <span class="checkmark"></span>
-            </label>
-            <p class="task"></p>
-            <div class = "btns">
-                <button class="edit-btn">
-                    <img src="./img/Vector.png" alt="edit" class="edit-img">
-                </button>
-                <button class="delete-btn">
-                    <span class="line1"></span>
-                    <span class="line2"></span>
-                </button>
-            </div>
-        `;
+    let taskCard = document.createElement('div');
+    // сохраняем id в dataset, чтобы потом связать DOM-элемент с объектом в массиве
+    taskCard.dataset.id = id;
+    taskCard.className = `task-card ${ischecked ? 'checked' : ''}`;
+    // разметка отображаемой задачи
+    taskCard.innerHTML = `
+        <label class="custom-checkbox">
+            <input type="checkbox" class="checkbox" ${ischecked ? 'checked' : ''}>
+            <span class="checkmark"></span>
+        </label>
+        <p class="task"></p>
+        <div class = "btns">
+            <button class="edit-btn">
+                <img src="./img/Vector.png" alt="edit" class="edit-img">
+            </button>
+            <button class="delete-btn">
+                <span class="line1"></span>
+                <span class="line2"></span>
+            </button>
+        </div>
+    `;
 
-        // вставляем текст задачи в .task (<p>)
-        taskCard.querySelector('.task').textContent = tasktext;
-        taskBox.appendChild(taskCard); // вставляем задачу после контейнера
+    // вставляем текст задачи в .task (<p>)
+    taskCard.querySelector('.task').textContent = tasktext;
+    taskBox.appendChild(taskCard); // вставляем задачу после контейнера
 }
 
 function addTask(tasktext) {
@@ -68,7 +67,9 @@ function addTask(tasktext) {
 
     taskArr.push(task);
     saveTask();
-
+    if (currentFilter === 'completed'){
+        return
+    }
     createTask(task.id, task.tasktext, task.ischecked);
 }
 
@@ -83,18 +84,46 @@ function countTask() {
 }
 
 function changeMessage() { // смена текста message при выделении чекбоксов
-    // если задач не 0 и все сделаны
-    if (taskArr.length && taskArr.every(task => task.ischecked)) {
-        message.textContent = 'Задачи сделаны. Отдыхай!';
-        taskNum.textContent = '';
+    let filteredTask = taskArr;
+    if (currentFilter === 'all') {
+        // если задач не 0 и все сделаны
+        if (filteredTask.length && filteredTask.every(task => task.ischecked)) {
+            message.textContent = 'Задачи сделаны. Отдыхай!';
+            taskNum.textContent = '';
+        }
+        else if (!filteredTask.length) {
+            message.textContent = 'Задач нет. Отдыхай!';
+            taskNum.textContent = '';
+        }
+        else {
+            message.textContent = "Работаем! Задач: ";
+            taskNum.textContent = `${countTask()}`;
+        }
     }
-    else if (!taskArr.length) {
-        message.textContent = 'Задач нет. Отдыхай!';
-        taskNum.textContent = '';
+
+    else if (currentFilter === 'active') {
+        filteredTask = taskArr.filter(task => !task.ischecked);
+        if (filteredTask.length) {
+            message.textContent = "Активных задач: ";
+            taskNum.textContent = `${filteredTask.length}`;
+        }
+        else {
+            message.textContent = "Активных задач нет";
+            taskNum.textContent = ``;
+        }
     }
-    else {
-        message.textContent = "Работаем! Задач: ";
-        taskNum.textContent = `${countTask()}`;
+    
+
+    else if (currentFilter === 'completed') {
+        filteredTask = taskArr.filter(task => task.ischecked);
+        if (filteredTask.length) {
+            message.textContent = "Выполнено задач: ";
+            taskNum.textContent = `${filteredTask.length}`;
+        }
+        else {
+            message.textContent = "Нет выполненных задач";
+            taskNum.textContent = ``;
+        }
     }
 }
 
@@ -114,6 +143,7 @@ function handleCheckbox(event) {
     // отправляем в localStorage массив taskArr, тем самым обновляем данные
     saveTask();
     changeMessage();
+    // перерисовывваем карточки
     if (currentFilter !== 'all') {
         render();
     }
@@ -123,7 +153,7 @@ function handleCheckbox(event) {
 function handleDelete(event) {
     let taskCard = event.target.closest('.task-card');
     // удаление из массива удалённое задачи в DOM
-    const index = getTaskIndex(taskCard)
+    const index = getTaskIndex(taskCard);
     taskArr.splice(index, 1);
     // отправка в localStorage обновлённый массив
     saveTask();
@@ -138,91 +168,91 @@ function handleDelete(event) {
 
 function handleEdit(event) {
     let editBtnEl = event.target.closest('.edit-btn');
-        let taskCard = editBtnEl.closest('.task-card');
-        let task = taskCard.querySelector('.task');
+    let taskCard = editBtnEl.closest('.task-card');
+    let task = taskCard.querySelector('.task');
 
 
-        // запрет появления инпута при редактировании одной и нажатия на кнопку редактирования другой задачи
-        if (taskBox.querySelector('.edit-input')) return;
+    // запрет появления инпута при редактировании одной и нажатия на кнопку редактирования другой задачи
+    if (taskBox.querySelector('.edit-input')) return;
 
-        let taskText = task.textContent;
-        // вставляем поле ввода вместо текста задачи
-        let editInputHtml = `
-        <input type="text" class="edit-input" placeholder = "...">
-        `;
-        task.innerHTML =  editInputHtml;
-        let editInputEl = taskCard.querySelector('.edit-input');
-        editInputEl.value = taskText;
-
-
-        
-        // фокус на инпут, курсор в конец текста
-        editInputEl.focus();
-        const length = editInputEl.value.length;
-        // устанавливаем курсор в конец текста
-        editInputEl.setSelectionRange(length, length);
+    let taskText = task.textContent;
+    // вставляем поле ввода вместо текста задачи
+    let editInputHtml = `
+    <input type="text" class="edit-input" placeholder = "...">
+    `;
+    task.innerHTML =  editInputHtml;
+    let editInputEl = taskCard.querySelector('.edit-input');
+    editInputEl.value = taskText;
 
 
-
-        // кнопка подтверждения изменений вместо карандаша
-        editBtnEl.style.display = 'none';
-        
-        let editBtn2Html = `
-        <button class="edit-btn2">
-            <img src="./img/ok.svg" alt="edit" class="edit-img">
-        </button>
-        `
-        editBtnEl.insertAdjacentHTML('afterend', editBtn2Html);
-        
+    
+    // фокус на инпут
+    editInputEl.focus();
+    // устанавливаем курсор в конец текста
+    const length = editInputEl.value.length;
+    editInputEl.setSelectionRange(length, length);
 
 
 
-        let editBtn2 = taskCard.querySelector('.edit-btn2');
-        // флаг для предотвращения двойного вызова функции (от blur и нажатия esc, enter)
-        let isEditingFinished = false;
-        function finishEditing() {
-            // если редактирование уже закончено (был вызов) -> return
-            if (isEditingFinished) return;
-            let newText = editInputEl.value.trim();
-            if (!newText) {
-                editInputEl.focus();
-                return;
-            }
-            // меняем флаг, т.к. вызов функции произошёл
+    // кнопка подтверждения изменений вместо карандаша
+    editBtnEl.style.display = 'none';
+    
+    let editBtn2Html = `
+    <button class="edit-btn2">
+        <img src="./img/ok.svg" alt="edit" class="edit-img">
+    </button>
+    `
+    editBtnEl.insertAdjacentHTML('afterend', editBtn2Html);
+    
+
+
+
+    let editBtn2 = taskCard.querySelector('.edit-btn2');
+    // флаг для предотвращения двойного вызова функции (от blur и нажатия esc, enter)
+    let isEditingFinished = false;
+    function finishEditing() {
+        // если редактирование уже закончено (был вызов) -> return
+        if (isEditingFinished) return;
+        let newText = editInputEl.value.trim();
+        if (!newText) {
+            editInputEl.focus();
+            return;
+        }
+        // меняем флаг, т.к. вызов функции произошёл
+        isEditingFinished = true;
+
+        task.textContent = newText;                // вставляем отредактированную задачу в <p>
+        // находим индекс изменённой задачи. Изменяем данные в массиве и отправляем в localStorage
+        const index = getTaskIndex(taskCard);
+        taskArr[index].tasktext = newText;
+        saveTask();
+        editBtnEl.style.display = 'block';    // показываем старую кнопку edit
+        editBtn2.remove();                    // убираем кнопку "ок"
+    }
+
+    // на blur
+    editInputEl.addEventListener('blur', finishEditing);
+
+    // на Enter и Escape
+    editInputEl.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            finishEditing();
+        }
+        else if (e.key === 'Escape'){
+            e.preventDefault();
             isEditingFinished = true;
-
-            task.textContent = newText;                // вставляем отредактированную задачу в <p>
-            // находим индекс изменённой задачи. Изменяем данные в массиве и отправляем в localStorage
-            const index = getTaskIndex(taskCard);
-            taskArr[index].tasktext = newText;
-            saveTask();
+            task.textContent = taskText;
+            
             editBtnEl.style.display = 'block';    // показываем старую кнопку edit
             editBtn2.remove();                    // убираем кнопку "ок"
+
+            
         }
+    });
 
-        // на blur
-        editInputEl.addEventListener('blur', finishEditing);
-
-        // на Enter и Escape
-        editInputEl.addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') {
-                e.preventDefault();
-                finishEditing();
-            }
-            else if (e.key === 'Escape'){
-                e.preventDefault();
-                isEditingFinished = true;
-                task.textContent = taskText;
-                
-                editBtnEl.style.display = 'block';    // показываем старую кнопку edit
-                editBtn2.remove();                    // убираем кнопку "ок"
-
-                
-            }
-        });
-
-        // на клик по "ок"
-        editBtn2.addEventListener('click', finishEditing);
+    // на клик по "ок"
+    editBtn2.addEventListener('click', finishEditing);
 }
 
 function render(){
@@ -237,6 +267,7 @@ function render(){
     filteredTask.forEach(task => {
         createTask(task.id, task.tasktext, task.ischecked);
     });
+    changeMessage();
 }
 
 
@@ -258,15 +289,18 @@ taskBox.addEventListener('click', (event) => {
     }
 })
 
-let currentFilter = 'all';
+
 categories.addEventListener('click', (event) => {
     let allBtn = event.target.closest('.category-all');
     let activeBtn = event.target.closest('.category-active');
     let completedBtn = event.target.closest('.category-completed');
-
-    for (const btn of categoryBtns) {
-        btn.classList.remove('category-btn_active');
+    // убираем у всех категорий класс "активная"
+    if (event.target.closest('.category-btn')) {
+        for (const btn of categoryBtns) {
+            btn.classList.remove('category-btn_active');
+        }
     }
+    // присваиваем класс активности только нажатой. Именно кнопке, а не родительскому categories
     if (event.target !== categories) event.target.closest('.category-btn').classList.add('category-btn_active');
 
     if (allBtn) currentFilter = 'all'
