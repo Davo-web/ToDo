@@ -102,7 +102,6 @@ git clone https://github.com/Davo-web/ToDo.git
 - [ ] Drag & Drop сортировка
 - [ ] Категории и приоритеты
 - [ ] Light / Dark theme toggle
-- [ ] Сохранение порядка задач
 
 ---
 
