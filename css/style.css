@@ -6,7 +6,7 @@ html {
 }
 
 body {
-    font-family: Russo One, serif;
+    font-family: 'Russo One', serif;
     height: 100vh;
     background-color: #0F1117;
     display: flex;
@@ -23,12 +23,14 @@ body {
 
 
 .todo {
+    text-align: center;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 332px;
-    width: 1016px;
+    width: 100%;
+    max-width: 1016px;
+    min-height: 350px;
     background-color: #0A0D13;
     border-radius: 32px;
     padding: 40px 100px 28px;
@@ -54,6 +56,7 @@ body {
 }
 
 .form {
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -63,7 +66,8 @@ body {
 
 .input{
     font-size: 22px;
-    width: 656px;
+    width: 100%;
+    max-width: 656px;
     padding: 20px 40px;
     border-radius: 20px;
     background-color: #0F1117;
@@ -95,7 +99,8 @@ body {
 
 
 .categories {
-    width: 1016px;
+    width: 100%;
+    max-width: 1016px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
@@ -136,12 +141,14 @@ body {
 
 
 .task-box {
+    width: 100%;
     display: flex;
     flex-direction: column;
 }
 
 .task-card {
-    width: 1016px;
+    width: 100%;
+    max-width: 1016px;
     background-color: #0A0D13;
     margin-left: auto;
     margin-right: auto;
@@ -227,10 +234,10 @@ body {
 
 .btns {
     display: flex;
+    align-items: center;
 }
 
 .edit-btn, .edit-btn2 {
-    margin-right: 10px;
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -243,6 +250,7 @@ body {
 }
 
 .edit-input {
+    width: 100%;
     font-size: 25px;
     flex-grow: 1;
     padding: 10px 20px;
@@ -285,4 +293,264 @@ body {
 ::selection {
     background-color: #00D4FF;
     color: #000;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@media (max-width: 1024px) {
+    .todo {
+        padding: 40px 60px 28px;
+        min-height: 300px;
+    }
+
+    .todo-title {
+        font-size: 40px;
+    }
+
+    .slogan {
+        font-size: 22px;
+    }
+
+    .addBtn {
+        font-size: 16px;
+    }
+
+    .message {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 800px) {
+    body {
+        padding: 40px;
+    }
+
+    .todo {
+        padding: 40px 40px 28px;
+    }
+
+    .todo-title {
+        font-size: 34px;
+    }
+
+    .message {
+        font-size: 18px;
+    }
+
+    .input{
+        font-size: 20px;
+        padding: 20px 25px;
+    }
+
+    .categories {
+        gap: 18px;
+    }
+
+    .category-btn {
+        padding: 5px 20px;
+    }
+
+    .custom-checkbox {
+        margin-right: 40px;
+    }
+}
+
+@media (max-width: 650px) {
+    .todo {
+        min-height: 250px;
+        margin-bottom: 15px;
+        padding: 20px 30px 28px;
+    }
+
+    .todo-title {
+        font-size: 30px;
+    }
+
+    .slogan {
+        font-size: 20px;
+        margin-bottom: 30px;
+    }
+
+    .addBtn {
+        font-size: 15px;
+    }
+
+    .message {
+        margin-top: 7px;
+        font-size: 18px;
+    }
+
+    .input{
+        padding: 15px 20px;
+    }
+
+    .addBtn {
+        font-size: 14px;
+    }
+
+    .categories {
+        font-size: 16px;
+        grid-template-columns: none;
+        grid-template-rows: repeat(3, 1fr);
+        gap: 5px;
+        padding: 0px;
+    }
+
+    .task-card {
+        padding: 10px 20px;
+    }
+
+    .task {
+        font-size: 22px;
+    }
+
+    .edit-input {
+        font-size: 22px;
+        padding: 10px 15px;
+        margin-right: 20px;
+    }
+}
+
+@media (max-width: 560px) {
+    .todo {
+        min-height: 300px;
+        padding: 10px 30px;
+    }
+
+    .todo-title {
+        font-size: 24px;
+    }
+
+    .slogan {
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+    .message {
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+    .form {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .input{
+        padding: 15px 20px;
+    }
+
+    .addBtn {
+        padding: 10px 80px;
+    }
+
+    .categories {
+        gap: 5px;
+    }
+
+    .category-btn {
+        padding: 3px 20px;
+    }
+
+    .task-card {
+        padding: 10px 20px;
+    }
+
+    .task {
+        font-size: 20px;
+    }
+
+    .edit-img {
+        width: 25px;
+        height: 25px;
+    }
+
+    .task-card {
+        padding: 10px 20px;
+    }
+
+    .task {
+        font-size: 20px;
+    }
+
+    .edit-input {
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 460px) {
+    body {
+        padding: 20px;
+    }
+
+    .todo-title {
+        font-size: 22px;
+    }
+
+    .slogan {
+        font-size: 16px;
+        margin-bottom: 20px;
+    }
+
+    .form {
+        margin-bottom: 10px;
+        gap: 10px;
+    }
+
+    .input{
+        padding: 10px 15px;
+    }
+
+    .addBtn {
+        padding: 10px 80px;
+    }
+
+    .task {
+        font-size: 18px;
+    }
+
+    .edit-input {
+        font-size: 18px;
+    }
+
+    .custom-checkbox {
+        margin-right: 50px;
+    }
+}
+
+@media (max-width: 370px) {
+    .form {
+        gap: 8px;
+    }
+
+    .input{
+        padding: 5px 15px;
+        font-size: 18px;
+    }
+
+    .addBtn {
+        padding: 5px 20px;
+    }
+
+    .task {
+        font-size: 16px;
+    }
+
+    .edit-input {
+        font-size: 16px;
+    }
 }
